@@ -3,7 +3,10 @@ plugins {
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("kotlin-kapt")
+    id("com.github.dcendents.android-maven")
 }
+
+group ="com.github.rigo-ptz"
 
 android {
     compileSdkVersion(Android.compileSdkVersion)
