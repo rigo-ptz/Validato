@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:${Versions.androidGradle}")
+        classpath("com.android.tools.build:gradle:4.0.1")
         classpath("com.github.dcendents:android-maven-gradle-plugin:2.1")
         classpath(kotlin("gradle-plugin", Versions.kotlin))
     }

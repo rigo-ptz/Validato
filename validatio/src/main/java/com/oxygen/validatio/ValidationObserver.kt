@@ -5,8 +5,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 
 /**
@@ -16,34 +15,33 @@ import io.reactivex.subjects.BehaviorSubject
 class ValidationObserver(
   private var lifecycleOwner: LifecycleOwner?,
   private val validators: List<BehaviorSubject<Boolean>>,
+  private val skipFirst: Boolean = false,
   private val callback: (Boolean) -> Unit
 ) : LifecycleObserver {
 
-  private val compositeDisposable = CompositeDisposable()
+  private var validationDisposable: Disposable? = null
 
   init {
     lifecycleOwner?.lifecycle?.addObserver(this)
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
-  @SuppressWarnings("unused")
   fun startValidate() {
-    validate(validators, callback)
+    validationDisposable = Observable
+      .combineLatest(validators) { !it.contains(false) }
+      .publish { Observable.merge(it.take(1).filter { !skipFirst }, it.skip(1)) }
+      .subscribe { callback.invoke(it) }
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-  @SuppressWarnings("unused")
   fun stopValidate() {
-    lifecycleOwner?.lifecycle?.removeObserver(this)
-    compositeDisposable.clear()
-    lifecycleOwner = null
+    validationDisposable?.takeUnless { it.isDisposed }?.dispose()
   }
 
-  private fun validate(validators: List<BehaviorSubject<Boolean>>, callback: (Boolean) -> Unit) {
-    Observable
-      .combineLatest(validators) { !it.contains(false) }
-      .subscribe { callback.invoke(it) }
-      .addTo(compositeDisposable)
+  @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+  fun clear() {
+    lifecycleOwner?.lifecycle?.removeObserver(this)
+    lifecycleOwner = null
   }
 
 }

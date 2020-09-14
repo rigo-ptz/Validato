@@ -20,4 +20,16 @@ fun TextView.isNotEmpty(
   return subject
 }
 
-
+fun TextView.textDiffersFromDefault(
+  defaultString: String,
+  onError: (() -> Unit)? = null,
+  onSuccess: ((String) -> Unit)? = null
+): BehaviorSubject<Boolean> {
+  val subject = BehaviorSubject.createDefault(false)
+  this.doAfterTextChanged {
+    val differsFromDefault = it.trim() != defaultString
+    subject.onNext(differsFromDefault)
+    if (differsFromDefault) onSuccess?.invoke(it) else onError?.invoke()
+  }
+  return subject
+}
