@@ -1,3 +1,6 @@
+[![](https://jitpack.io/v/rigo-ptz/Validato.svg)](https://jitpack.io/#rigo-ptz/Validato)
+
+
 # Validato
 
 Validato is Android real-time validation library. It automatically starts validation when 
