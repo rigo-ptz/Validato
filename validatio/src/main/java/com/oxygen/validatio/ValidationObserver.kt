@@ -1,12 +1,7 @@
 package com.oxygen.validatio
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
+import androidx.lifecycle.*
+import com.oxygen.validatio.util.combineLatest
 
 /**
  * @author Yamushev Igor
@@ -14,12 +9,17 @@ import io.reactivex.subjects.BehaviorSubject
  */
 class ValidationObserver(
   private var lifecycleOwner: LifecycleOwner?,
-  private val validators: List<BehaviorSubject<Boolean>>,
+  private val validators: List<LiveData<Boolean>>,
   private val skipFirst: Boolean = false,
-  private val callback: (Boolean) -> Unit
+  callback: (Boolean) -> Unit
 ) : LifecycleObserver {
 
-  private var validationDisposable: Disposable? = null
+  private var results: LiveData<Boolean>? = null
+  private val observer = object : Observer<Boolean> {
+    override fun onChanged(t: Boolean?) {
+      callback.invoke(t ?: return)
+    }
+  }
 
   init {
     lifecycleOwner?.lifecycle?.addObserver(this)
@@ -27,21 +27,23 @@ class ValidationObserver(
 
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   fun startValidate() {
-    validationDisposable = Observable
-      .combineLatest(validators) { !it.contains(false) }
-      .publish { Observable.merge(it.take(1).filter { !skipFirst }, it.skip(1)) }
-      .subscribe { callback.invoke(it) }
+    val owner = lifecycleOwner ?: return
+
+    results = validators.combineLatest(skipFirst) { !it.contains(false) }
+
+    results?.observe(owner, observer)
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   fun stopValidate() {
-    validationDisposable?.takeUnless { it.isDisposed }?.dispose()
+    results?.removeObserver(observer)
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
   fun clear() {
     lifecycleOwner?.lifecycle?.removeObserver(this)
     lifecycleOwner = null
+    results = null
   }
 
 }

@@ -37,13 +37,9 @@ dependencies {
     testImplementation(Core.robolectric)
     testImplementation(Core.mockito)
     testImplementation(Core.mockitoKotlin)
+    testImplementation(Core.coreTests)
 
     // Android
     implementation(Core.androidxAppCompat)
     implementation(Core.androidxKtx)
-
-    // RxJava
-    implementation(Libs.rxJava2)
-    implementation(Libs.rxAndroid)
-    implementation(Libs.rxKotlin)
 }

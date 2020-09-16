@@ -4,7 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.nhaarman.mockitokotlin2.*
-import io.reactivex.subjects.BehaviorSubject
+//import io.reactivex.subjects.BehaviorSubject
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
@@ -15,7 +15,9 @@ import org.mockito.Mockito
  * @author Yamushev Igor
  * @since  2019-07-24
  */
-class ValidationTest {
+@Deprecated("Migrated from RxJava to LiveData")
+class ValidationTestRx {
+/*
 
   private lateinit var bs1: BehaviorSubject<Boolean>
   private lateinit var bs2: BehaviorSubject<Boolean>
@@ -131,6 +133,7 @@ class ValidationTest {
     // Then
     Mockito.verify(observerCallback, Mockito.times(1)).invoke(false)
   }
+*/
 
 
 }

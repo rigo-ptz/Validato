@@ -6,7 +6,25 @@
   android:layout_height="match_parent">
 
   <EditText
+    android:id="@+id/name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
+
+  <EditText
+    android:id="@+id/surname"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+  <EditText
+    android:id="@+id/email"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+  <Button
+    android:id="@+id/btn"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/holo_green_light"
+    android:text="OK"/>
 
 </LinearLayout>

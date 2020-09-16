@@ -7,6 +7,7 @@ object Core {
   const val androidxTestRunner = "androidx.test:runner:${Versions.testRunner}"
   const val androidxAppCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
   const val androidxKtx = "androidx.core:core-ktx:${Versions.appCompat}"
+  const val coreTests = "androidx.arch.core:core-testing:${Versions.coreTests}"
 }
 
 object Libs {

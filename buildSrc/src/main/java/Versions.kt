@@ -8,6 +8,7 @@ object Versions {
   const val robolectric = "3.5.1"
   const val mockito = "3.0.0"
   const val mockitoKotlin = "2.1.0"
+  const val coreTests = "2.1.0"
 
   const val appCompat = "1.0.2"
 
