@@ -30,13 +30,12 @@ class MainActivity : AppCompatActivity() {
     )
 
     ValidationObserver(
-      this,
-      validators,
-      false
+      lifecycleOwner = this,
+      validators = validators,
+      skipFirstEvents = false
     ) {
-      Log.e("Val", "$it")
       btn.isEnabled = it
     }
-
   }
+
 }

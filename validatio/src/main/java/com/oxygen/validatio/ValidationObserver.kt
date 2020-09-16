@@ -10,7 +10,7 @@ import com.oxygen.validatio.util.combineLatest
 class ValidationObserver(
   private var lifecycleOwner: LifecycleOwner?,
   private val validators: List<LiveData<Boolean>>,
-  private val skipFirst: Boolean = false,
+  private val skipFirstEvents: Boolean = false,
   callback: (Boolean) -> Unit
 ) : LifecycleObserver {
 
@@ -29,7 +29,7 @@ class ValidationObserver(
   fun startValidate() {
     val owner = lifecycleOwner ?: return
 
-    results = validators.combineLatest(skipFirst) { !it.contains(false) }
+    results = validators.combineLatest(skipFirstEvents) { !it.contains(false) }
 
     results?.observe(owner, observer)
   }

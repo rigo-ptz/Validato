@@ -10,33 +10,39 @@ lifecycle owner is started and stops when owner is stopped.
 Usual usage in activity or in presenter looks like this: 
 
 ```kotlin
-val validators = mutableListOf<BehaviorSubject<Boolean>>().apply {
-  add(editText.isDateOfBirthValid())
-  add(anotherEditText.isNotEmpty())
+val validators = listOf(
+      name.isNotEmpty(),
+      surname.isNotEmpty(),
+      email.isValidEmail()
+    )
+
+ValidationObserver(
+  lifecycleOwner = this,
+  validators = validators,
+  skipFirstEvents = false
+) {
+  // Do something here
+  btn.isEnabled = it
 }
 
-ValidationObserver(this, validators) { isValid ->
-   // Do something here
-   submitButton.enabled = isValid
-}
 ```
 
 where, for example, "isNotEmpty"
 
 ```kotlin
 fun TextView.isNotEmpty(
-  onError: ((Boolean) -> Unit)? = null,
-  onSuccess: ((String) -> Unit)? = null
-): BehaviorSubject<Boolean> {
-  val subject = BehaviorSubject.createDefault(false)
+  onError: ((String, View) -> Unit)? = null,
+  onSuccess: ((String, View) -> Unit)? = null
+): LiveData<Boolean> {
+  val subject = MutableLiveData<Boolean>().apply { value = false }
   this.doAfterTextChanged {
-    subject.onNext(it.isNotEmpty())
-    if (it.isNotEmpty()) onSuccess?.invoke(it)
+    subject.value = it.isNotEmpty()
+    if (it.isNotEmpty()) onSuccess?.invoke(it, this) else onError?.invoke(it, this)
   }
   return subject
 }
 ```
 
 # Validation rules
-Just create behavior subject and put it into the list!
+Create method (or extension function) that returns LiveData<Boolean> and put it into the list!
 
