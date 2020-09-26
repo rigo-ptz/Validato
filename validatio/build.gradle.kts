@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion(Android.minSdkVersion)
         targetSdkVersion(Android.targetSdkVersion)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -42,4 +42,5 @@ dependencies {
     // Android
     implementation(Core.androidxAppCompat)
     implementation(Core.androidxKtx)
+    implementation(Core.androidxLiveData)
 }

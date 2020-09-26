@@ -11,6 +11,7 @@ object Versions {
   const val coreTests = "2.1.0"
 
   const val appCompat = "1.0.2"
+  const val liveData = "2.2.0"
 
   const val rxAndroid = "2.0.2"
   const val rxJava = "2.2.0"

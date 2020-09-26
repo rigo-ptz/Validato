@@ -12,8 +12,8 @@ import com.oxygen.validatio.util.doAfterTextChanged
  * @since  2019-07-23
  */
 fun TextView.isNotEmpty(
-  onError: ((String, View) -> Unit)? = null,
-  onSuccess: ((String, View) -> Unit)? = null
+  onSuccess: ((String, View) -> Unit)? = null,
+  onError: ((String, View) -> Unit)? = null
 ): LiveData<Boolean> {
   val subject = MutableLiveData<Boolean>().apply { value = false }
   this.doAfterTextChanged {
@@ -24,21 +24,22 @@ fun TextView.isNotEmpty(
 }
 
 fun TextView.isValidEmail(
-  onError: ((String, View) -> Unit)? = null,
-  onSuccess: ((String, View) -> Unit)? = null
+  onSuccess: ((String, View) -> Unit)? = null,
+  onError: ((String, View) -> Unit)? = null
 ): LiveData<Boolean> {
   val subject = MutableLiveData<Boolean>().apply { value = false }
   this.doAfterTextChanged {
-    subject.value = it.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(it).matches()
-    if (it.isNotEmpty()) onSuccess?.invoke(it, this) else onError?.invoke(it, this)
+    val isValidEmail = it.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(it).matches()
+    subject.value = isValidEmail
+    if (isValidEmail) onSuccess?.invoke(it, this) else onError?.invoke(it, this)
   }
   return subject
 }
 
 fun TextView.textDiffersFromDefault(
   defaultString: String,
-  onError: ((String, View) -> Unit)? = null,
-  onSuccess: ((String, View) -> Unit)? = null
+  onSuccess: ((String, View) -> Unit)? = null,
+  onError: ((String, View) -> Unit)? = null
 ): LiveData<Boolean> {
   val subject = MutableLiveData<Boolean>().apply { value = false }
   this.doAfterTextChanged {

@@ -11,13 +11,15 @@ class ValidationObserver(
   private var lifecycleOwner: LifecycleOwner?,
   private val validators: List<LiveData<Boolean>>,
   private val skipFirstEvents: Boolean = false,
-  callback: (Boolean) -> Unit
+  private val fireIfAtLeastOneIsValid: Boolean = false,
+  callback: ((Boolean) -> Unit)?
 ) : LifecycleObserver {
 
-  private var results: LiveData<Boolean>? = null
+  private var lastResult: LiveData<Boolean>? = null
+
   private val observer = object : Observer<Boolean> {
     override fun onChanged(t: Boolean?) {
-      callback.invoke(t ?: return)
+      callback?.invoke(t ?: return)
     }
   }
 
@@ -29,21 +31,23 @@ class ValidationObserver(
   fun startValidate() {
     val owner = lifecycleOwner ?: return
 
-    results = validators.combineLatest(skipFirstEvents) { !it.contains(false) }
+    lastResult = validators.combineLatest(skipFirstEvents) { if (fireIfAtLeastOneIsValid) it.contains(true) else !it.contains(false) }
 
-    results?.observe(owner, observer)
+    lastResult?.observe(owner, observer)
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   fun stopValidate() {
-    results?.removeObserver(observer)
+    lastResult?.removeObserver(observer)
   }
 
   @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
   fun clear() {
     lifecycleOwner?.lifecycle?.removeObserver(this)
     lifecycleOwner = null
-    results = null
+    lastResult = null
   }
+
+  fun getLastResult() = lastResult?.value ?: false
 
 }
