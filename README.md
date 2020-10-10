@@ -6,7 +6,7 @@
 Validato is Android real-time validation library. It automatically starts validation when 
 lifecycle owner is started and stops when owner is stopped.
 
-# How add to your project
+# How to add to your project
 
 Add repository to your root-level build.gradle
 ```kotlin
