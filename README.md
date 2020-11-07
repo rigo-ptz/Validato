@@ -19,7 +19,7 @@ allprojects {
 
 ```
 
-Add the dependency (version = 1.1.0)
+Add the dependency (version = 1.1.1)
 ```kotlin
 dependencies {
       implementation 'com.github.rigo-ptz:Validato:Version'
