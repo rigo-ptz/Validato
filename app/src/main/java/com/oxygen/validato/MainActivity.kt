@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     ValidationObserver(
       lifecycleOwner = this,
       validators = validators,
-      skipFirstEvents = false
+      skipFirstEvents = true
     ) {
       btn.isEnabled = it
     }
